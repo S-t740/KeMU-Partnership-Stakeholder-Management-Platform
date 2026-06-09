@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
   Plus, MapPin, ChevronRight, Download, Globe
 } from 'lucide-react';
@@ -14,12 +15,15 @@ import type { Stakeholder } from '@/lib/supabase';
 
 const STATUSES = ['Active', 'Inactive', 'Prospect', 'Archived'];
 
-export default function StakeholdersPage() {
+function StakeholdersContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
+
   const [stakeholders, setStakeholders] = useState<Stakeholder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(initialQuery);
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('');
   const [country, setCountry] = useState('');
@@ -238,5 +242,13 @@ export default function StakeholdersPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function StakeholdersPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <StakeholdersContent />
+    </Suspense>
   );
 }

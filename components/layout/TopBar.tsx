@@ -3,7 +3,7 @@
 import { Bell, Search, Plus, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/': { title: 'Dashboard', subtitle: 'Analytics & Overview' },
@@ -31,8 +31,10 @@ const mockNotifications = [
 
 export default function TopBar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Match route prefix
   const pageKey = Object.keys(PAGE_TITLES)
@@ -49,14 +51,22 @@ export default function TopBar() {
       </div>
 
       {/* Search */}
-      <div className="relative hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 w-56 focus-within:border-sky-500/40 transition-colors">
+      <form 
+        onSubmit={(e) => { 
+          e.preventDefault(); 
+          if (searchQuery.trim()) router.push(`/stakeholders?q=${encodeURIComponent(searchQuery)}`); 
+        }} 
+        className="relative hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 w-56 focus-within:border-sky-500/40 transition-colors"
+      >
         <Search className="h-3.5 w-3.5 text-slate-500 shrink-0" />
         <input
           type="text"
           placeholder="Search stakeholders…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="bg-transparent text-sm text-slate-300 placeholder:text-slate-500 outline-none w-full"
         />
-      </div>
+      </form>
 
       {/* Quick Add */}
       <div className="relative">

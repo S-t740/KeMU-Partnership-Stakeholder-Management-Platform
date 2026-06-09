@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import { 
   LayoutDashboard, 
   Users, 
@@ -13,7 +14,8 @@ import {
   HelpCircle,
   Menu,
   Sparkles,
-  Upload
+  Upload,
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +36,13 @@ const BOTTOM_NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(true); // Start collapsed on mobile
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
 
   return (
     <>
@@ -140,6 +148,19 @@ export default function Sidebar() {
             </Link>
           );
         })}
+        
+        <button
+          onClick={handleLogout}
+          className={cn(
+            'w-full flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all group mt-2',
+            'text-rose-400 hover:bg-rose-500/10 hover:text-rose-300',
+            collapsed && 'justify-center px-0'
+          )}
+          title={collapsed ? "Log out" : undefined}
+        >
+          <LogOut className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" />
+          {!collapsed && <span className="font-medium text-sm">Log out</span>}
+        </button>
       </div>
     </aside>
     </>
