@@ -43,12 +43,8 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="h-16 w-16 mx-auto rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center mb-4 shadow-xl shadow-sky-500/20">
-            <svg className="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+          <div className="h-20 w-20 mx-auto rounded-2xl bg-white flex items-center justify-center mb-4 shadow-xl shadow-sky-500/20 p-2 border border-white/20">
+            <img src="/logo.png" alt="Uzury Empowerment Hub" className="h-full w-full object-contain" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">Uzury Platform</h1>
           <p className="text-slate-400 mt-2">Admin Login Portal</p>

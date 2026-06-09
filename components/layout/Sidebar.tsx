@@ -1,37 +1,35 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard,
-  Users,
-  Handshake,
-  TrendingUp,
-  CalendarCheck,
+import { 
+  LayoutDashboard, 
+  Users, 
+  Briefcase, 
+  Calendar, 
   FileText,
-  Upload,
   Settings,
-  Bell,
-  ChevronLeft,
-  ChevronRight,
-  Building2,
+  HelpCircle,
+  Menu,
   Sparkles,
+  Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 
-const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard, description: 'Analytics & Overview' },
-  { name: 'Stakeholders', href: '/stakeholders', icon: Users, description: 'Directory' },
-  { name: 'Engagements', href: '/engagements', icon: Handshake, description: 'Activity Log' },
-  { name: 'Opportunities', href: '/opportunities', icon: TrendingUp, description: 'Pipeline' },
-  { name: 'Follow-Ups', href: '/followups', icon: CalendarCheck, description: 'Reminders' },
-  { name: 'Documents', href: '/documents', icon: FileText, description: 'Repository' },
-  { name: 'Import Data', href: '/import', icon: Upload, description: 'Excel Import' },
+const NAV_ITEMS = [
+  { label: 'Dashboard', icon: LayoutDashboard, href: '/' },
+  { label: 'Stakeholders', icon: Users, href: '/stakeholders' },
+  { label: 'Engagements', icon: Calendar, href: '/engagements' },
+  { label: 'Opportunities', icon: Briefcase, href: '/opportunities' },
+  { label: 'Follow-Ups', icon: Calendar, href: '/followups' },
+  { label: 'Documents', icon: FileText, href: '/documents' },
+  { label: 'Import Wizard', icon: Upload, href: '/import' },
 ];
 
-const bottomNav = [
-  { name: 'Settings', href: '/settings', icon: Settings },
+const BOTTOM_NAV_ITEMS = [
+  { label: 'Settings', icon: Settings, href: '/settings' },
+  { label: 'Help & Support', icon: HelpCircle, href: '/help' },
 ];
 
 export default function Sidebar() {
@@ -41,127 +39,86 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        'relative flex flex-col h-screen sidebar-gradient border-r border-white/[0.06] transition-all duration-300 ease-in-out',
-        collapsed ? 'w-16' : 'w-64'
+        'h-screen flex flex-col bg-[#0B1121] border-r border-white/[0.06] transition-all duration-300 relative',
+        collapsed ? 'w-[72px]' : 'w-64'
       )}
     >
+      {/* Decorative background glow */}
+      <div className="absolute top-0 left-0 w-full h-48 bg-sky-500/5 blur-[50px] pointer-events-none" />
+
       {/* Collapse toggle */}
-      <button
+      <button 
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-8 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-slate-700 border border-white/10 hover:bg-slate-600 transition-colors"
+        className="absolute -right-3 top-6 bg-[#1E293B] border border-white/10 rounded-full p-1 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors z-50"
       >
-        {collapsed ? (
-          <ChevronRight className="h-3 w-3 text-slate-300" />
-        ) : (
-          <ChevronLeft className="h-3 w-3 text-slate-300" />
-        )}
+        <Menu className="h-4 w-4" />
       </button>
 
       {/* Logo / Brand */}
       <div className={cn('flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]', collapsed && 'justify-center px-0')}>
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 shadow-lg">
-          <Sparkles className="h-5 w-5 text-white" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-white/20">
+          <img src="/logo.png" alt="Uzury Empowerment Hub" className="h-full w-full object-contain" />
         </div>
         {!collapsed && (
           <div>
-            <div className="text-sm font-bold text-white leading-tight">Uzury</div>
+            <div className="text-sm font-bold text-white leading-tight">Uzury Hub</div>
             <div className="text-[10px] text-sky-400/80 font-medium uppercase tracking-widest">Platform</div>
           </div>
         )}
       </div>
 
       {/* Main nav */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin py-4 px-2 space-y-0.5">
-        {navigation.map((item) => {
+      <div className="flex-1 overflow-y-auto scrollbar-none py-4 px-3 space-y-1 relative z-10">
+        <div className={cn('mb-2 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider', collapsed && 'sr-only')}>
+          Main Menu
+        </div>
+        {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
           return (
             <Link
-              key={item.name}
+              key={item.href}
               href={item.href}
-              title={collapsed ? item.name : undefined}
               className={cn(
-                'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
-                isActive
-                  ? 'bg-gradient-to-r from-sky-500/20 to-indigo-500/10 text-sky-300 border border-sky-500/20'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5',
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all group relative',
+                isActive 
+                  ? 'bg-sky-500/10 text-sky-400' 
+                  : 'text-slate-400 hover:bg-white/5 hover:text-white',
                 collapsed && 'justify-center px-0'
               )}
+              title={collapsed ? item.label : undefined}
             >
-              <item.icon
-                className={cn(
-                  'h-5 w-5 shrink-0 transition-colors',
-                  isActive ? 'text-sky-400' : 'text-slate-500 group-hover:text-slate-300'
-                )}
-              />
-              {!collapsed && (
-                <div className="flex flex-col min-w-0">
-                  <span className="truncate">{item.name}</span>
-                  {isActive && (
-                    <span className="text-[10px] text-sky-400/70 font-normal">{item.description}</span>
-                  )}
-                </div>
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-sky-400 rounded-r-full shadow-[0_0_10px_rgba(56,189,248,0.5)]" />
               )}
-              {!collapsed && isActive && (
-                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-sky-400" />
-              )}
+              <item.icon className={cn('h-5 w-5 shrink-0 transition-transform group-hover:scale-110', isActive && 'text-sky-400')} />
+              {!collapsed && <span className="font-medium text-sm">{item.label}</span>}
             </Link>
           );
         })}
-      </nav>
-
-      {/* Stats mini widget */}
-      {!collapsed && (
-        <div className="mx-3 mb-3 rounded-xl bg-gradient-to-br from-sky-500/10 to-indigo-500/10 border border-sky-500/15 p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Building2 className="h-4 w-4 text-sky-400" />
-            <span className="text-xs font-semibold text-sky-300">Stakeholder Summary</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="text-center">
-              <div className="text-lg font-bold text-white">12</div>
-              <div className="text-[10px] text-slate-400">Total</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-emerald-400">9</div>
-              <div className="text-[10px] text-slate-400">Active</div>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Bottom nav */}
-      <div className="border-t border-white/[0.06] p-2 space-y-0.5">
-        {bottomNav.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            title={collapsed ? item.name : undefined}
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-all',
-              collapsed && 'justify-center px-0'
-            )}
-          >
-            <item.icon className="h-5 w-5 shrink-0 text-slate-500" />
-            {!collapsed && <span>{item.name}</span>}
-          </Link>
-        ))}
-        {/* User */}
-        <div
-          className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2.5 mt-1',
-            collapsed && 'justify-center px-0'
-          )}
-        >
-          <div className="h-7 w-7 shrink-0 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white">
-            A
-          </div>
-          {!collapsed && (
-            <div className="min-w-0">
-              <div className="text-xs font-medium text-slate-300 truncate">Administrator</div>
-              <div className="text-[10px] text-slate-500 truncate">admin@uzury.org</div>
-            </div>
-          )}
-        </div>
+      <div className="p-3 border-t border-white/[0.06] space-y-1 relative z-10">
+        {BOTTOM_NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all group',
+                isActive 
+                  ? 'bg-sky-500/10 text-sky-400' 
+                  : 'text-slate-400 hover:bg-white/5 hover:text-slate-300',
+                collapsed && 'justify-center px-0'
+              )}
+              title={collapsed ? item.label : undefined}
+            >
+              <item.icon className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" />
+              {!collapsed && <span className="font-medium text-sm">{item.label}</span>}
+            </Link>
+          );
+        })}
       </div>
     </aside>
   );
