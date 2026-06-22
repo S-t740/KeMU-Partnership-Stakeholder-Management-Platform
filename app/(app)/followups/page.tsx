@@ -44,14 +44,13 @@ export default function FollowUpsPage() {
     finally { setUpdatingId(null); }
   };
 
-  if (loading) return <LoadingSpinner />;
-
   const officers = Array.from(new Set(followups.map((f) => f.assigned_to ?? f.responsible_officer).filter(Boolean) as string[]));
 
   const filtered = useMemo(() => followups.filter((f) => {
     const q = search.toLowerCase();
     const partnerName = (f.stakeholders as any)?.name ?? '';
-    if (q && !f.title.toLowerCase().includes(q) && !partnerName.toLowerCase().includes(q)) return false;
+    const title = f.title ?? '';
+    if (q && !title.toLowerCase().includes(q) && !partnerName.toLowerCase().includes(q)) return false;
     if (priorityFilter && f.priority !== priorityFilter) return false;
     if (officerFilter) {
       const assignee = f.assigned_to ?? f.responsible_officer;
@@ -60,13 +59,17 @@ export default function FollowUpsPage() {
     return true;
   }), [followups, search, priorityFilter, officerFilter]);
 
+  if (loading) return <LoadingSpinner />;
+
+
+
   const byStatus = (status: FollowUpStatus) => filtered.filter((f) => f.status === status);
 
   // Stats
   const total = filtered.length;
   const today = new Date().toISOString().split('T')[0];
   const dueToday = filtered.filter((f) => f.due_date === today && f.status !== 'Completed').length;
-  const overdueCount = filtered.filter((f) => isOverdue(f.due_date) && f.status !== 'Completed').length;
+  const overdueCount = filtered.filter((f) => f.due_date && isOverdue(f.due_date) && f.status !== 'Completed').length;
   const completionRate = total === 0 ? 0 : Math.round((byStatus('Completed').length / total) * 100);
 
   return (
@@ -202,8 +205,8 @@ export default function FollowUpsPage() {
                 </thead>
                 <tbody className="divide-y divide-white/[0.04]">
                   {filtered.map((f) => {
-                    const days = daysUntil(f.due_date);
-                    const over = isOverdue(f.due_date) && f.status !== 'Completed';
+                    const days = f.due_date ? daysUntil(f.due_date) : 0;
+                    const over = f.due_date ? isOverdue(f.due_date) && f.status !== 'Completed' : false;
                     return (
                       <tr key={f.id} className="table-row-hover">
                         <td className="px-4 py-3.5 max-w-[200px]">
@@ -222,10 +225,14 @@ export default function FollowUpsPage() {
                         </td>
                         <td className="px-4 py-3.5"><TaskPriorityBadge priority={f.priority} /></td>
                         <td className="px-4 py-3.5">
-                          <span className={cn('text-xs', over ? 'text-red-400' : 'text-slate-400')}>
-                            {formatDate(f.due_date)}
-                            {over && ' (overdue)'}
-                          </span>
+                          {f.due_date ? (
+                            <span className={cn('text-xs', over ? 'text-red-400' : 'text-slate-400')}>
+                              {formatDate(f.due_date)}
+                              {over && ' (overdue)'}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-slate-500">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-3.5 text-xs text-slate-400">{f.assigned_to ?? f.responsible_officer ?? '—'}</td>
                         <td className="px-4 py-3.5">
@@ -262,8 +269,8 @@ function TaskCard({
   onStatusChange: (id: string, status: FollowUpStatus) => void;
   updating: boolean;
 }) {
-  const days = daysUntil(f.due_date);
-  const over = isOverdue(f.due_date) && currentStatus !== 'Completed';
+  const days = f.due_date ? daysUntil(f.due_date) : 0;
+  const over = f.due_date ? isOverdue(f.due_date) && currentStatus !== 'Completed' : false;
   const partnerName = (f.stakeholders as any)?.name;
   const oppName = (f.opportunities as any)?.name;
 
@@ -310,7 +317,7 @@ function TaskCard({
         )}
         <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
           <Calendar className="h-3 w-3 shrink-0" />
-          <span>{formatDate(f.due_date)}</span>
+          <span>{f.due_date ? formatDate(f.due_date) : 'No date'}</span>
           {(f.assigned_to ?? f.responsible_officer) && (
             <>
               <span className="text-slate-600">·</span>

@@ -6,11 +6,11 @@ import { notFound, useRouter } from 'next/navigation';
 import {
   ArrowLeft, Globe, Phone, Mail, MapPin, Linkedin,
   Edit2, Plus, Calendar, Briefcase, FileText,
-  ExternalLink, Star, Tag, Users2
+  ExternalLink, Star, Tag, Users2, Trash2
 } from 'lucide-react';
 import {
   getStakeholder, getContactsForStakeholder, getEngagementsForStakeholder,
-  getOpportunitiesForStakeholder, getFollowUpsForStakeholder
+  getOpportunitiesForStakeholder, getFollowUpsForStakeholder, deleteStakeholder
 } from '@/lib/db';
 import { Badge } from '@/components/ui/Badge';
 import { Button, Card, LoadingSpinner } from '@/components/ui/index';
@@ -30,8 +30,22 @@ export default function StakeholderDetailPage({ params }: { params: { id: string
   const [followups, setFollowups] = useState<FollowUp[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [tab, setTab] = useState('Overview');
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this stakeholder? This action cannot be undone.')) return;
+    setIsDeleting(true);
+    try {
+      await deleteStakeholder(id);
+      router.push('/stakeholders');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete stakeholder.');
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     Promise.all([
@@ -100,7 +114,18 @@ export default function StakeholderDetailPage({ params }: { params: { id: string
             </div>
           </div>
           <div className="flex gap-2 shrink-0">
-            <Button variant="secondary" size="sm"><Edit2 className="h-4 w-4" /> Edit</Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="text-red-400 hover:text-red-300 hover:bg-red-500/10 border-white/5"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              <Trash2 className="h-4 w-4" /> {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+            <Link href={`/stakeholders/${id}/edit`}>
+              <Button variant="secondary" size="sm"><Edit2 className="h-4 w-4" /> Edit</Button>
+            </Link>
           </div>
         </div>
       </div>
