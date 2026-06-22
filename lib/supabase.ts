@@ -8,15 +8,18 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export type Database = {
   public: {
     Tables: {
-      stakeholders: { Row: Stakeholder; Insert: StakeholderInsert; Update: Partial<StakeholderInsert> };
-      contacts: { Row: Contact; Insert: ContactInsert; Update: Partial<ContactInsert> };
-      engagements: { Row: Engagement; Insert: EngagementInsert; Update: Partial<EngagementInsert> };
-      opportunities: { Row: Opportunity; Insert: OpportunityInsert; Update: Partial<OpportunityInsert> };
-      followups: { Row: FollowUp; Insert: FollowUpInsert; Update: Partial<FollowUpInsert> };
-      documents: { Row: Document; Insert: DocumentInsert; Update: Partial<DocumentInsert> };
+      stakeholders:    { Row: Stakeholder;    Insert: StakeholderInsert;    Update: Partial<StakeholderInsert> };
+      contacts:        { Row: Contact;        Insert: ContactInsert;        Update: Partial<ContactInsert> };
+      engagements:     { Row: Engagement;     Insert: EngagementInsert;     Update: Partial<EngagementInsert> };
+      opportunities:   { Row: Opportunity;    Insert: OpportunityInsert;    Update: Partial<OpportunityInsert> };
+      followups:       { Row: FollowUp;       Insert: FollowUpInsert;       Update: Partial<FollowUpInsert> };
+      documents:       { Row: Document;       Insert: DocumentInsert;       Update: Partial<DocumentInsert> };
+      partner_programs: { Row: PartnerProgram; Insert: PartnerProgramInsert; Update: Partial<PartnerProgramInsert> };
     };
   };
 };
+
+// ─── Enums / Union Types ──────────────────────────────────────
 
 export type StakeholderCategory =
   | 'Foundation'
@@ -29,6 +32,12 @@ export type StakeholderCategory =
   | 'Strategic Partner';
 
 export type StakeholderStatus = 'Active' | 'Inactive' | 'Prospect' | 'Archived';
+
+export type PartnerPriority =
+  | 'Strategic Priority'
+  | 'Growth Opportunity'
+  | 'Engagement Priority'
+  | 'General Partner';
 
 export type OpportunityStatus =
   | 'Identified'
@@ -49,6 +58,18 @@ export type EngagementType =
   | 'Partnership Discussion'
   | 'Other';
 
+export type FollowUpStatus = 'Pending' | 'In Progress' | 'Completed' | 'On Hold';
+
+export type TaskPriority = 'High' | 'Medium' | 'Low';
+
+export type UserRole =
+  | 'Administrator'
+  | 'Partnership Officer'
+  | 'Executive Management'
+  | 'Partnerships Fellow';
+
+// ─── Interfaces ───────────────────────────────────────────────
+
 export interface Stakeholder {
   id: string;
   name: string;
@@ -60,6 +81,8 @@ export interface Stakeholder {
   linkedin: string | null;
   twitter: string | null;
   status: StakeholderStatus;
+  partner_priority: PartnerPriority;
+  program_areas: string[] | null;
   areas_of_interest: string[] | null;
   strategic_alignment: string | null;
   notes: string | null;
@@ -79,6 +102,8 @@ export interface StakeholderInsert {
   linkedin?: string;
   twitter?: string;
   status?: StakeholderStatus;
+  partner_priority?: PartnerPriority;
+  program_areas?: string[];
   areas_of_interest?: string[];
   strategic_alignment?: string;
   notes?: string;
@@ -169,24 +194,33 @@ export interface FollowUp {
   id: string;
   stakeholder_id: string;
   engagement_id: string | null;
+  opportunity_id: string | null;
   title: string;
   notes: string | null;
   due_date: string;
   completed: boolean;
   completed_at: string | null;
+  status: FollowUpStatus;
+  priority: TaskPriority;
   responsible_officer: string | null;
+  assigned_to: string | null;
   created_at: string;
   stakeholders?: { name: string };
+  opportunities?: { name: string } | null;
 }
 
 export interface FollowUpInsert {
   stakeholder_id: string;
   engagement_id?: string;
+  opportunity_id?: string;
   title: string;
   notes?: string;
   due_date: string;
   completed?: boolean;
+  status?: FollowUpStatus;
+  priority?: TaskPriority;
   responsible_officer?: string;
+  assigned_to?: string;
 }
 
 export interface Document {
@@ -212,4 +246,31 @@ export interface DocumentInsert {
   document_type?: string;
   description?: string;
   uploaded_by?: string;
+}
+
+export interface PartnerProgram {
+  id: string;
+  name: string;
+  description: string | null;
+  color: string;
+  created_at: string;
+}
+
+export interface PartnerProgramInsert {
+  name: string;
+  description?: string;
+  color?: string;
+}
+
+export interface ActivityLogEntry {
+  id: string;
+  table_name: string;
+  record_id: string;
+  action: string;
+  old_data: Record<string, unknown> | null;
+  new_data: Record<string, unknown> | null;
+  performed_at: string;
+  performed_by_name: string | null;
+  performed_by_email: string | null;
+  record_label: string | null;
 }

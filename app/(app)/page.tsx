@@ -5,13 +5,13 @@ import Link from 'next/link';
 import {
   Users, TrendingUp, Handshake, CalendarCheck,
   AlertTriangle, DollarSign, CheckCircle2, Clock,
-  ArrowRight, Building2
+  ArrowRight, Building2, Star, ClipboardList
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
-import { getDashboardStats, getFollowUps, getStakeholders, getOpportunities } from '@/lib/db';
+import { getDashboardStats, getFollowUps, getStakeholders, getOpportunities, getStrategicDashboardStats, getCoordinationStats } from '@/lib/db';
 import { Badge } from '@/components/ui/Badge';
 import { Card, Button, LoadingSpinner } from '@/components/ui/index';
 import { MetricCard } from '@/components/ui/MetricCard';
@@ -70,6 +70,8 @@ export default function DashboardPage() {
   const [recentStakeholders, setRecentStakeholders] = useState<Stakeholder[]>([]);
   const [overdueList, setOverdueList] = useState<FollowUp[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [strategicStats, setStrategicStats] = useState<Awaited<ReturnType<typeof getStrategicDashboardStats>> | null>(null);
+  const [coordStats, setCoordStats] = useState<Awaited<ReturnType<typeof getCoordinationStats>> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,11 +80,15 @@ export default function DashboardPage() {
       getStakeholders(),
       getFollowUps(),
       getOpportunities(),
-    ]).then(([s, stakeholders, followups, opps]) => {
+      getStrategicDashboardStats(),
+      getCoordinationStats(),
+    ]).then(([s, stakeholders, followups, opps, strategic, coord]) => {
       setStats(s);
       setRecentStakeholders(stakeholders.slice(0, 4));
       setOverdueList(followups.filter((f) => !f.completed && isOverdue(f.due_date)));
       setOpportunities(opps);
+      setStrategicStats(strategic);
+      setCoordStats(coord);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -298,6 +304,74 @@ export default function DashboardPage() {
             </div>
           </Card>
         </div>
+      </div>
+
+      {/* New modules row */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {/* Strategic Priority Snapshot */}
+        <Card title="Strategic Priority Snapshot" subtitle="Partners by tier" action={
+          <Link href="/partners"><Button variant="ghost" size="sm">View all <ArrowRight className="h-3 w-3" /></Button></Link>
+        }>
+          <div className="px-5 py-3 space-y-2">
+            {(strategicStats?.byPriority ?? []).length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="text-xs text-slate-500 mb-2">No priority data yet.</p>
+                <Link href="/stakeholders"><Button size="sm" variant="ghost">Assign priorities <ArrowRight className="h-3 w-3" /></Button></Link>
+              </div>
+            ) : [
+              { label: 'Strategic Priority',  color: 'bg-rose-400' },
+              { label: 'Growth Opportunity',  color: 'bg-amber-400' },
+              { label: 'Engagement Priority', color: 'bg-sky-400' },
+              { label: 'General Partner',     color: 'bg-slate-500' },
+            ].map(({ label, color }) => {
+              const entry = (strategicStats?.byPriority ?? []).find((b) => b.name === label);
+              const count = entry?.value ?? 0;
+              const total = (strategicStats?.byPriority ?? []).reduce((s, b) => s + b.value, 0) || 1;
+              const pct = Math.round((count / total) * 100);
+              return (
+                <div key={label} className="flex items-center gap-3">
+                  <span className={`h-2 w-2 rounded-full shrink-0 ${color}`} />
+                  <span className="text-[11px] text-slate-400 w-36 shrink-0">{label}</span>
+                  <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${color} opacity-80 transition-all`} style={{ width: `${pct}%` }} />
+                  </div>
+                  <span className="text-[11px] text-white font-semibold w-6 text-right">{count}</span>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        {/* Coordination Status */}
+        <Card title="Coordination Status" subtitle="Task workflow overview" action={
+          <Link href="/coordination"><Button variant="ghost" size="sm">Hub <ArrowRight className="h-3 w-3" /></Button></Link>
+        }>
+          <div className="px-5 py-3">
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              {[
+                { label: 'Pending',     color: 'text-slate-300', status: 'Pending' },
+                { label: 'In Progress', color: 'text-sky-400',   status: 'In Progress' },
+                { label: 'On Hold',     color: 'text-amber-400', status: 'On Hold' },
+                { label: 'Completed',   color: 'text-emerald-400', status: 'Completed' },
+              ].map(({ label, color, status }) => (
+                <div key={status} className="bg-white/[0.03] rounded-lg p-3 border border-white/[0.04]">
+                  <p className="text-[10px] text-slate-500 mb-1">{label}</p>
+                  <p className={`text-xl font-bold ${color}`}>{coordStats?.byStatus?.[status] ?? 0}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-between text-xs text-slate-400">
+              <span>Completion rate</span>
+              <span className="text-emerald-400 font-semibold">{coordStats?.completionRate ?? 0}%</span>
+            </div>
+            <div className="mt-1.5 h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full transition-all"
+                style={{ width: `${coordStats?.completionRate ?? 0}%` }}
+              />
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );

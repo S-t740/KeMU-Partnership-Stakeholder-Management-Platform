@@ -116,9 +116,28 @@
 
   /* Form input */
   .form-input {
-    @apply w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-foreground
-           placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50
-           focus:border-primary/40 transition-all duration-150;
+    @apply w-full border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+           placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500/50
+           focus:border-sky-500/40 transition-all duration-150;
+    background-color: #1e293b;
+  }
+
+  /* Select elements — need solid bg so native OS options are readable */
+  select.form-input,
+  .form-input select {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    cursor: pointer;
+  }
+
+  /* Force option elements to always be readable regardless of OS theme */
+  option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+
+  option:disabled {
+    color: #64748b !important;
   }
 
   /* Kanban column */

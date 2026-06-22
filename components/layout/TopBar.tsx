@@ -10,9 +10,12 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/stakeholders': { title: 'Stakeholder Directory', subtitle: 'All organizations and individuals' },
   '/engagements': { title: 'Engagement Log', subtitle: 'All stakeholder interactions' },
   '/opportunities': { title: 'Opportunity Pipeline', subtitle: 'Funding & partnership opportunities' },
+  '/opportunities/dashboard': { title: 'Opportunity Pipeline Dashboard', subtitle: 'Deadline tracking & grant analytics' },
   '/followups': { title: 'Follow-Up Manager', subtitle: 'Scheduled reminders and tasks' },
   '/documents': { title: 'Document Repository', subtitle: 'Files and agreements' },
   '/import': { title: 'Import Data', subtitle: 'Excel & CSV import wizard' },
+  '/partners': { title: 'Strategic Partners', subtitle: 'Priority-tiered partner management' },
+  '/coordination': { title: 'Coordination Hub', subtitle: 'Team workflows & activity log' },
   '/settings': { title: 'Settings', subtitle: 'Platform configuration' },
 };
 
