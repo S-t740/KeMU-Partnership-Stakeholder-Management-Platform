@@ -18,6 +18,7 @@ import {
   Star,
   BarChart3,
   ClipboardList,
+  Bot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +40,7 @@ const NAV_SECTIONS = [
     items: [
       { label: 'Strategic Partners',   icon: Star,     href: '/partners' },
       { label: 'Opportunity Pipeline', icon: BarChart3, href: '/opportunities/dashboard' },
+      { label: 'AI Agents',            icon: Bot,       href: '/agents' },
     ],
   },
   {

@@ -19,6 +19,7 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/coordination': { title: 'Coordination Hub', subtitle: 'Team workflows & activity log' },
   '/settings': { title: 'Settings', subtitle: 'Platform configuration' },
   '/help': { title: 'Help & Support', subtitle: 'Guides, FAQs & contact information' },
+  '/agents': { title: 'AI Agent Network', subtitle: 'Automated opportunity discovery pipeline' },
 };
 
 const QUICK_ACTIONS = [
