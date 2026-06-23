@@ -18,6 +18,7 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/partners': { title: 'Strategic Partners', subtitle: 'Priority-tiered partner management' },
   '/coordination': { title: 'Coordination Hub', subtitle: 'Team workflows & activity log' },
   '/settings': { title: 'Settings', subtitle: 'Platform configuration' },
+  '/help': { title: 'Help & Support', subtitle: 'Guides, FAQs & contact information' },
 };
 
 const QUICK_ACTIONS = [
