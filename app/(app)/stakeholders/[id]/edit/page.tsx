@@ -128,7 +128,7 @@ export default function EditStakeholderPage({ params }: { params: { id: string }
         </div>
         <div>
           <label className="text-xs font-medium text-slate-400 block mb-1.5">Strategic Alignment</label>
-          <textarea className="form-input min-h-[80px] resize-none" placeholder="How does this stakeholder align with Uzury's mission?" value={form.strategic_alignment} onChange={(e) => set('strategic_alignment', e.target.value)} />
+          <textarea className="form-input min-h-[80px] resize-none" placeholder="How does this stakeholder align with KeMU's mission?" value={form.strategic_alignment} onChange={(e) => set('strategic_alignment', e.target.value)} />
         </div>
         <div>
           <label className="text-xs font-medium text-slate-400 block mb-1.5">Notes</label>

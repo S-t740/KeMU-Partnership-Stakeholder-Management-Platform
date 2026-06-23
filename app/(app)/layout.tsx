@@ -4,7 +4,7 @@ import AuthGuard from '@/components/auth/AuthGuard';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: { template: '%s | Uzury Platform', default: 'Uzury Platform' },
+  title: { template: '%s | KeMU Partnerships Hub', default: 'KeMU Partnerships Hub' },
 };
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

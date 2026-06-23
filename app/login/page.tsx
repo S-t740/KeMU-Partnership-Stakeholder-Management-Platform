@@ -58,12 +58,12 @@ export default function LoginPage() {
           <div className="h-28 w-28 mx-auto rounded-3xl bg-white flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(14,165,233,0.15)] p-1 border border-white/10 group animate-[bounce_4s_ease-in-out_infinite]">
             <img 
               src="/logo.jpg" 
-              alt="Uzury Logo" 
+              alt="KeMU Partnerships Hub Logo" 
               className="h-full w-full object-contain rounded-2xl group-hover:scale-105 transition-transform duration-700 ease-out" 
             />
           </div>
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-200 to-slate-500 tracking-tight mb-2 animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-200 fill-mode-both">
-            Uzury Hub
+            KeMU Partnerships Hub
           </h1>
           <p className="text-xs text-sky-400 font-bold tracking-[0.2em] uppercase animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-300 fill-mode-both">
             Admin Portal
@@ -85,7 +85,7 @@ export default function LoginPage() {
                 <input
                   type="email"
                   className="w-full px-5 py-4 bg-black/20 border border-white/5 rounded-2xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-sky-500/50 focus:border-sky-500/50 transition-all duration-300"
-                  placeholder="admin@uzury.com"
+                  placeholder="admin@kemu.ac.ke"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
