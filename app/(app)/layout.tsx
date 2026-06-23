@@ -20,7 +20,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 {children}
               </div>
               <footer className="mt-12 py-6 border-t border-white/[0.06] text-center text-xs text-slate-500">
-                &copy; {new Date().getFullYear()} All rights reserved Meru Tech and Innovation Hub
+                © {new Date().getFullYear()} CRIBI — All Rights Reserved
               </footer>
             </div>
           </main>

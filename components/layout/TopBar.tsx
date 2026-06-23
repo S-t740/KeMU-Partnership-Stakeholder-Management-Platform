@@ -1,9 +1,10 @@
 'use client';
 
-import { Bell, Search, Plus, ChevronDown } from 'lucide-react';
+import { Bell, Search, Plus, ChevronDown, Sun, Moon } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   '/': { title: 'Dashboard', subtitle: 'Analytics & Overview' },
@@ -38,6 +39,7 @@ export default function TopBar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { theme, toggleTheme } = useTheme();
 
   // Match route prefix
   const pageKey = Object.keys(PAGE_TITLES)
@@ -49,8 +51,8 @@ export default function TopBar() {
     <header className="header-blur sticky top-0 z-30 flex h-14 items-center gap-4 pl-14 md:pl-6 pr-6">
       {/* Page title */}
       <div className="flex-1 min-w-0">
-        <h1 className="text-base font-semibold text-white truncate">{page.title}</h1>
-        <p className="text-xs text-slate-500 truncate">{page.subtitle}</p>
+        <h1 className="text-base font-semibold text-slate-800 dark:text-white truncate">{page.title}</h1>
+        <p className="text-xs text-slate-400 dark:text-slate-500 truncate">{page.subtitle}</p>
       </div>
 
       {/* Search */}
@@ -59,15 +61,15 @@ export default function TopBar() {
           e.preventDefault(); 
           if (searchQuery.trim()) router.push(`/stakeholders?q=${encodeURIComponent(searchQuery)}`); 
         }} 
-        className="relative hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 w-56 focus-within:border-sky-500/40 transition-colors"
+        className="relative hidden md:flex items-center gap-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 w-56 focus-within:border-sky-500/40 transition-colors"
       >
-        <Search className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+        <Search className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
         <input
           type="text"
           placeholder="Search stakeholders…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="bg-transparent text-sm text-slate-300 placeholder:text-slate-500 outline-none w-full"
+          className="bg-transparent text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none w-full"
         />
       </form>
 
@@ -96,6 +98,20 @@ export default function TopBar() {
           </div>
         )}
       </div>
+
+      {/* Theme Toggle */}
+      <button
+        id="theme-toggle"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 transition-all duration-200 group"
+      >
+        {theme === 'dark' ? (
+          <Sun className="h-4 w-4 text-amber-400 transition-transform duration-300 group-hover:rotate-12" />
+        ) : (
+          <Moon className="h-4 w-4 text-slate-500 transition-transform duration-300 group-hover:-rotate-12" />
+        )}
+      </button>
 
       {/* Notifications */}
       <div className="relative">

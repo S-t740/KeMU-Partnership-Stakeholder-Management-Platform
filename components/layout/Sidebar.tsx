@@ -90,7 +90,7 @@ export default function Sidebar() {
 
       <aside
         className={cn(
-          'h-screen flex flex-col bg-[#0B1121] border-r border-white/[0.06] transition-all duration-300 z-50',
+          'h-screen flex flex-col bg-slate-50 dark:bg-[#0B1121] border-r border-slate-200 dark:border-white/[0.06] transition-all duration-300 z-50',
           'fixed inset-y-0 left-0 md:relative',
           collapsed ? '-translate-x-full md:translate-x-0 md:w-[72px]' : 'w-64 translate-x-0'
         )}
@@ -107,14 +107,14 @@ export default function Sidebar() {
         </button>
 
         {/* Logo / Brand */}
-        <div className={cn('flex items-center gap-3 px-4 py-5 border-b border-white/[0.06]', collapsed && 'justify-center px-0')}>
+        <div className={cn('flex items-center gap-3 px-4 py-5 border-b border-slate-200 dark:border-white/[0.06]', collapsed && 'justify-center px-0')}>
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-[0_0_15px_rgba(14,165,233,0.3)] border border-white/20">
             <img src="/logo.jpg" alt="KeMU Partnerships Hub" className="h-full w-full object-contain mix-blend-multiply" />
           </div>
           {!collapsed && (
             <div>
-              <div className="text-sm font-bold text-white leading-tight">KeMU Partnerships Hub</div>
-              <div className="text-[10px] text-sky-400/80 font-medium uppercase tracking-widest">Platform</div>
+              <div className="text-sm font-bold text-slate-800 dark:text-white leading-tight">KeMU Partnerships Hub</div>
+              <div className="text-[10px] text-sky-500 dark:text-sky-400/80 font-medium uppercase tracking-widest">Platform</div>
             </div>
           )}
         </div>
@@ -125,7 +125,7 @@ export default function Sidebar() {
             <div key={section.label}>
               {/* Section label */}
               {!collapsed && (
-                <p className="mb-1 px-3 text-[10px] font-semibold text-slate-600 uppercase tracking-wider">
+                <p className="mb-1 px-3 text-[10px] font-semibold text-slate-400 dark:text-slate-600 uppercase tracking-wider">
                   {section.label}
                 </p>
               )}
@@ -139,8 +139,8 @@ export default function Sidebar() {
                       className={cn(
                         'flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all group relative',
                         active 
-                          ? 'bg-sky-500/10 text-sky-400' 
-                          : 'text-slate-400 hover:bg-white/5 hover:text-white',
+                          ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400' 
+                          : 'text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-white',
                         collapsed && 'justify-center px-0'
                       )}
                       title={collapsed ? item.label : undefined}

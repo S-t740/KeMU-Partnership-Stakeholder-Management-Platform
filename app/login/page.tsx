@@ -144,9 +144,9 @@ export default function LoginPage() {
         <div className="text-center mt-12 animate-in fade-in duration-1000 delay-700 fill-mode-both">
           <p className="text-[11px] text-slate-500 uppercase tracking-[0.15em] font-bold">
             © {new Date().getFullYear()}{' '}
-            <a href="https://merutechhub.co.ke" target="_blank" rel="noopener noreferrer" className="text-green-500 hover:text-green-400 transition-colors duration-200">
-              Meru Tech & Innovation Hub
-            </a>
+            <span className="text-slate-400">
+              CRIBI
+            </span>
           </p>
           <p className="text-[9px] text-slate-600 mt-2 uppercase tracking-widest">
             All Rights Reserved
